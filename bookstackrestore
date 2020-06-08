@@ -1,0 +1,31 @@
+#!/bin/bash
+#     ////     //  ////     //
+#    // //    //  // //    //
+#   //  //   //  //  //   //
+#  //   //  //  //   //  //
+# //    // //  //    // //
+#//     ////  //     ////
+#
+# 20200608 - Created script to restore bookstack
+#
+echo "--------------------------------"
+echo "--[ Extract bookstack_backup ]--"
+echo "--------------------------------"
+sudo tar -xvzf /home/nn/bookstack/bookstack_backup_*.tar.gz --directory /home/nn/bookstack/
+sudo rm /home/nn/bookstack/bookstack_backup_*.tar.gz
+echo "-------------------------------"
+echo "--[ Restore and Migrate SQL ]--"
+echo "-------------------------------"
+mysql -u nn nnserver < /home/nn/bookstack/home/nn/bookstack_backup/BookStack.sql
+yes | php /var/www/html/BookStack/artisan migrate
+echo "---------------------"
+echo "--[ Extract Files ]--"
+echo "---------------------"
+sudo tar -xvzf /home/nn/bookstack/home/nn/bookstack_backup/bookstack-complete-backup.tar.gz --directory /
+sudo cp /home/nn/bookstack/.env /var/www/html/BookStack/.env
+sudo chown -R www-data:www-data /var/www/html/BookStack/
+sudo chmod -R 755 /var/www/html/BookStack/
+echo "---------------------"
+echo "--[ Restart Nginx ]--"
+echo "---------------------"
+sudo systemctl restart nginx

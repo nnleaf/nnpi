@@ -1,0 +1,19 @@
+#!/bin/bash
+#     ////     //  ////     //
+#    // //    //  // //    //
+#   //  //   //  //  //   //
+#  //   //  //  //   //  //
+# //    // //  //    // //
+#//     ////  //     ////
+#
+# 20200608 - Created cron script to restore bookstack
+#
+tar -xvzf /home/nn/bookstack/bookstack_backup_*.tar.gz --directory /home/nn/bookstack/
+rm /home/nn/bookstack/bookstack_backup_*.tar.gz
+mysql -u nn nnserver < /home/nn/bookstack/home/nn/bookstack_backup/BookStack.sql
+yes | php /var/www/html/BookStack/artisan migrate
+tar -xvzf /home/nn/bookstack/home/nn/bookstack_backup/bookstack-complete-backup.tar.gz --directory /
+cp /home/nn/bookstack/.env /var/www/html/BookStack/.env
+chown -R www-data:www-data /var/www/html/BookStack/
+chmod -R 755 /var/www/html/BookStack/
+systemctl restart nginx
