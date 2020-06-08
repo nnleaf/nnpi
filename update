@@ -27,10 +27,6 @@ then
   echo "-------------------------"
   sudo apt-get autoclean
 fi
-echo "--------------------------"
-echo "--[ Checking WireGuard ]--"
-echo "--------------------------"
-sudo wg
 echo "------------------------"
 echo "--[ Updating mlocate ]--"
 echo "------------------------"
@@ -62,7 +58,7 @@ then
     echo "---------------------------------"
     echo "--[ Testing disk access speed ]--"
     echo "---------------------------------"
-    sudo hdparm -tT /dev/sda1
+    sudo hdparm -tT /dev/root
   fi
   echo "--------------------------------"
   echo "--[ Run rkhunter scan? (y/n) ]--"
